@@ -43,7 +43,7 @@ and add data to the object:
 mc.add_data(xs, ys, states)
 ```
 
-Here, `xs` is a python list (of length $$n$$) of NumPy arrays. Each of these arrays contains the x-coordinates for a data set at a particular state. Similarly, `ys` is a list of length $$n$$ of NumPy arrays, each containing the y-coordinates for a data set at corresponding states. `states` is a list of length $$n$$, with elements parameterizing the different states.
+Here, `xs` is a python list (of length n) of NumPy arrays. Each of these arrays contains the x-coordinates for a data set at a particular state. Similarly, `ys` is a list of length n of NumPy arrays, each containing the y-coordinates for a data set at corresponding states. `states` is a list of length n, with elements parameterizing the different states.
 
 ### Adding coordinate transformations to the `MasterCurve`
 
