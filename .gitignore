@@ -128,4 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Untracked demos
+/demos/untracked
+
 .DS_Store
