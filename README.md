@@ -2,7 +2,7 @@
 
 Python package for automatically superimposing data sets to create a master curve, using Gaussian process regression and maximum a posteriori estimation.
 
-Publication of this work is forthcoming. For now, if you use this software, please cite it using the metadata in the `CITATION.cff` file.
+Publication of this work is forthcoming. For now, if you use this software, please cite it using the metadata in the [citation](CITATION.cff) file.
 
 ## Installation
 
