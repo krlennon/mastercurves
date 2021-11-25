@@ -75,7 +75,7 @@ Multiple examples of the software's use can be found in the [demos folder](demos
 
 ## Contibuting
 
-Inquiries and suggestions can be directed to krlennon[at]mit.edu. In particular, useful transformations can be directly added to the [transformations](mastercurves/transformations) directory, either in a local copy of the package or by raising an issue here!
+Inquiries and suggestions can be directed to krlennon[at]mit.edu. In particular, useful transformations can be directly added to the [transforms](mastercurves/transforms) directory, either in a local copy of the package or by raising an issue here!
 
 ## License
 
