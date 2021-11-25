@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import sys
-sys.path.append('../src')
-from transforms import Multiply
-from mastercurve import MasterCurve
+from mastercurves import MasterCurve
+from mastercurves.transforms import Multiply
 import progressbar
+from sklearn.gaussian_process.kernels import WhiteKernel
 
 # Read the data
 t = [100, 200, 300, 400, 500, 600, 700, 800]
@@ -18,8 +18,8 @@ with open("data/HB_model_fit_R01.csv", encoding='mac_roman') as file:
     next(reader)
     k = 0
     for row in reader:
-        vs[int(np.floor(k/10))] += [float(row[7])]
-        torques[int(np.floor(k/10))] += [float(row[8])]
+        vs[int(np.floor(k/10))] += [float(row[10])]
+        torques[int(np.floor(k/10))] += [float(row[11])]
         k += 1
 
 for i in range(len(t)):
@@ -33,13 +33,14 @@ t.reverse()
 
 # Define a master curve
 mc = MasterCurve()
+mc.set_gp_kernel(mc.kernel + WhiteKernel(0.05**2, "fixed"))
 mc.add_data(vs, torques, t)
 
 # Add transformations
 mc.add_htransform(Multiply())
 mc.add_vtransform(Multiply())
 mc.superpose()
-mc.plot()
+mc.plot(log=True, colormap=plt.cm.viridis)
 
 # Plot the shifts
 hshifts = mc.hparams[0]

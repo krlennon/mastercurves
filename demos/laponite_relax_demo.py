@@ -2,9 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import sys
-sys.path.append('../src')
-from transforms import Multiply, PowerLawAge
-from mastercurve import MasterCurve
+from mastercurves import MasterCurve
+from mastercurves.transforms import Multiply, PowerLawAge
+import matplotlib.ticker as tck
+import time
+from sklearn.gaussian_process.kernels import WhiteKernel
 
 # Read the files
 ts = [[],[],[],[],[]]
@@ -34,13 +36,26 @@ mc = MasterCurve()
 mc.add_data(ts, Js, tws)
 
 # Add transformations
-mc.add_htransform(PowerLawAge(15000))
+mc.add_htransform(PowerLawAge(600))
 mc.add_vtransform(Multiply())
 
 # Superpose
+start = time.time()
 mc.superpose()
+stop = time.time()
+print(f"Time: {stop-start}s")
+print(mc.hparams[0])
+print(mc.huncertainties[0])
 
 # Plot
-fig1, ax1, fig2, ax2, fig3, ax3 = mc.plot()
+fig1, ax1, fig2, ax2, fig3, ax3 = mc.plot(log=True, colormap=plt.cm.viridis)
+ax2.tick_params(which="both",direction="in",top=True,right=True)
+ax2.yaxis.set_major_locator(tck.MultipleLocator(100))
+ax2.yaxis.set_minor_locator(tck.MultipleLocator(10))
+ax2.yaxis.set_minor_formatter(tck.FormatStrFormatter(''))
+ax3.tick_params(which="both",direction="in",top=True,right=True)
+ax3.yaxis.set_major_locator(tck.MultipleLocator(100))
+ax3.yaxis.set_minor_locator(tck.MultipleLocator(10))
+ax3.yaxis.set_minor_formatter(tck.FormatStrFormatter(''))
 plt.show()
 

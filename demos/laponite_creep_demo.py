@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import sys
-sys.path.append('../src')
-from transforms import Multiply, PowerLawAge
-from mastercurve import MasterCurve
+from mastercurves import MasterCurve
+from mastercurves.transforms import Multiply, PowerLawAge
+from sklearn.gaussian_process.kernels import WhiteKernel
 
 # Read the files
 ts = [[],[],[],[],[]]
@@ -30,6 +30,7 @@ tws = [15000, 9600, 6000, 3600, 1500]
 # Develop a master curve
 mc = MasterCurve()
 mc.add_data(ts, Js, tws)
+mc.set_gp_kernel(mc.kernel + WhiteKernel(0.02**2, "fixed"))
 
 # Add transformations
 mc.add_htransform(PowerLawAge(15000))
@@ -37,6 +38,7 @@ mc.add_vtransform(Multiply())
 
 # Superpose
 mc.superpose()
+print(mc.hparams[0])
 
 # Plot
 fig1, ax1, fig2, ax2, fig3, ax3 = mc.plot()

@@ -2,9 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import sys
-sys.path.append('../src')
-from transforms import Multiply
-from mastercurve import MasterCurve
+from mastercurves import MasterCurve
+from mastercurves.transforms import Multiply
 from sklearn.gaussian_process.kernels import RationalQuadratic, WhiteKernel, ConstantKernel, DotProduct
 
 # Loop through different RH values for time-temperature superposition
@@ -54,6 +53,7 @@ for rh in rhs:
     tans.reverse()
     T.reverse()
     mc = MasterCurve()
+    mc.set_gp_kernel(RationalQuadratic() * ConstantKernel() + ConstantKernel() + WhiteKernel())
     mc.add_data(ws, tans, T)
 
     # Add transformations
@@ -74,6 +74,7 @@ for rh in rhs:
 
     # Next, do vertical shifting
     mc_vert = MasterCurve()
+    mc_vert.set_gp_kernel(RationalQuadratic() * ConstantKernel() + ConstantKernel() + WhiteKernel())
     mc_vert.add_data(wtransformed, Gps, T)
 
     # Add transformations
@@ -116,6 +117,7 @@ ax2.legend()
 
 # Now, do the water superposition
 mc = MasterCurve()
+mc.set_gp_kernel(RationalQuadratic() * ConstantKernel() + ConstantKernel() + WhiteKernel())
 mc.add_data(ws_tts, tans_tts, rhs)
 
 # Add transformations
@@ -129,6 +131,7 @@ hshifts_90ref = hshifts/hshifts[rhs.index(90)]
 # Now, do vertical shifting
 wtransformed = mc.xtransformed
 mc.clear()
+mc.set_gp_kernel(RationalQuadratic() * ConstantKernel() + ConstantKernel() + WhiteKernel())
 mc.add_data(wtransformed, Gps_tts, rhs)
 mc.add_vtransform(Multiply())
 mc.superpose()

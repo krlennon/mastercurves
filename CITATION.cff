@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Automatic Identification of Similarity Relations
+  from Data
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Kyle
+    family-names: Lennon
+    email: krlennon@mit.edu
+    affiliation: Massachusetts Institute of Technology
+    orcid: 'https://orcid.org/0000-0002-1251-5461'
+  - given-names: James
+    family-names: Swan
+    email: jswan@mit.edu
+    affiliation: Massachusetts Institute of Technology
+identifiers:
+  - type: doi
+    value: ''
