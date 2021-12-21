@@ -543,7 +543,7 @@ class MasterCurve:
                 y = self.vtransforms[l].forward(p, self.states[k], y)
             self.ytransformed += [y]
 
-    def plot(self, log=True, colormap=plt.cm.tab10):
+    def plot(self, log=True, colormap=plt.cm.tab10, colorby="index"):
         """
         Plot the data, GPs, and master curve.
         Inputs:
@@ -552,24 +552,29 @@ class MasterCurve:
         """
         # Plot the data
         fig1, ax1 = plt.subplots(1,1)
-        for k in range(len(self.xdata)):
-            if log:
-                ax1.loglog(np.exp(self.xdata[k]), np.exp(self.ydata[k]), 'o', label=str(self.states[k]),
-                        color=colormap(k/len(self.states)))
-            else:
-                ax1.plot(self.xdata[k], self.ydata[k], 'o', label=str(self.states[k]),
-                        color=colormap(k/len(self.states)))
-        ax1.legend()
 
         # Plot the data with the GPs
         fig2, ax2 = plt.subplots(1,1)
+
+        if colorby == "state":
+            colorfn = lambda k: (self.states[k] - np.min(self.states))/(np.max(self.states) - np.min(self.states))
+        else:
+            colorfn = lambda k: k/len(self.states)
+
         for k in range(len(self.xdata)):
             if log:
+                ax1.loglog(np.exp(self.xdata[k]), np.exp(self.ydata[k]), 'o', label=str(self.states[k]),
+                        color=colormap(colorfn(k)))
                 ax2.loglog(np.exp(self.xdata[k]), np.exp(self.ydata[k]), 'o', label=str(self.states[k]),
-                        color=colormap(k/len(self.states)))
+                        color=colormap(colorfn(k)))
             else:
+                ax1.plot(self.xdata[k], self.ydata[k], 'o', label=str(self.states[k]),
+                        color=colormap(colorfn(k)))
                 ax2.plot(self.xdata[k], self.ydata[k], 'o', label=str(self.states[k]),
-                        color=colormap(k/len(self.states)))
+                        color=colormap(colorfn(k)))
+        ax1.legend()
+
+        # Add the GPs to the second figure
         xlim = ax2.get_xlim()
         if log:
             xgp = np.linspace(np.log(xlim[0]),np.log(xlim[1]),100)
@@ -578,22 +583,23 @@ class MasterCurve:
         for k in range(len(self.gps)):
             y, s = self.gps[k].predict(xgp.reshape(-1,1), return_std=True)
             if log:
-                ax2.loglog(np.exp(xgp), np.exp(y), color=colormap(k/len(self.states)))
-                ax2.fill_between(np.exp(xgp), np.exp(y - s), np.exp(y + s), color=colormap(k/len(self.states)), alpha=0.2)
+                ax2.loglog(np.exp(xgp), np.exp(y), color=colormap(colorfn(k)))
+                ax2.fill_between(np.exp(xgp), np.exp(y - s), np.exp(y + s), color=colormap(colorfn(k)), alpha=0.2)
             else:
-                ax2.plot(xgp, y, color=colormap(k/len(self.states)))
-                ax2.fill_between(xgp, y - s, y + s, color=colormap(k/len(self.states)), alpha=0.2)
+                ax2.plot(xgp, y, color=colormap(colorfn(k)))
+                ax2.fill_between(xgp, y - s, y + s, color=colormap(colorfn(k)), alpha=0.2)
         ax2.set_xlim(xlim)
 
         # Plot the master curve
         fig3, ax3 = plt.subplots(1,1)
+
         for k in range(len(self.xtransformed)):
             if log:
                 ax3.loglog(np.exp(self.xtransformed[k]), np.exp(self.ytransformed[k]), 'o', label=str(self.states[k]),
-                        color=colormap(k/len(self.states)))
+                        color=colormap(colorfn(k)))
             else:
                 ax3.plot(self.xtransformed[k], self.ytransformed[k], 'o', label=str(self.states[k]),
-                        color=colormap(k/len(self.states)))
+                        color=colormap(colorfn(k)))
 
         return fig1, ax1, fig2, ax2, fig3, ax3
 

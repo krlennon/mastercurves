@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 DESCRIPTION = 'Python package for building master curves from data'
 LONG_DESCRIPTION = 'Python package for building master curves from data. Uses Gaussian process regression and Bayesian inference to build statically robust master curves from parametrically self-similar data, with uncertainty estimates.'
 
