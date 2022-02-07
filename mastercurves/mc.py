@@ -12,7 +12,7 @@ class MasterCurve:
     """
     Class definition for a master curve, consisting of multiple data sets superimposed.
     """
-    def __init__(self):
+    def __init__(self, fixed_noise=0.04):
         """
         Initialize object with some x_data sets and corresponding y_data sets.
         """
@@ -24,7 +24,7 @@ class MasterCurve:
 
         # Set the default Gaussian Process kernel
         self.kernel = (RationalQuadratic() * ConstantKernel() + ConstantKernel()
-                + WhiteKernel() + WhiteKernel(0.04**2, "fixed"))
+                + WhiteKernel() + WhiteKernel(fixed_noise**2, "fixed"))
         self.gps = []
 
         # Set the default x and y transformations to the identity
@@ -188,7 +188,9 @@ class MasterCurve:
 
         # Transform to the other state
         x1s2 = self._change_states(self.htransforms, x1, s1, s2, hp1, hp2)
+        x1s2 = x1s2[~np.isnan(x1s2)]
         x2s1 = self._change_states(self.htransforms, x2, s2, s1, hp2, hp1)
+        x2s1 = x2s1[~np.isnan(x2s1)]
 
         # Transform to the other state
         y1s2 = self._change_states(self.vtransforms, y1, s1, s2, vp1, vp2)
@@ -199,8 +201,8 @@ class MasterCurve:
         mu2, sig2 = gp1.predict(x2s1.reshape(-1,1), return_std=True)
 
         # Compute the NLL
-        nll1 = (y1s2 - mu1)**2/(2*sig1**2) + np.log(sig1**2)/2 + np.log(2*np.pi)/2
-        nll2 = (y2s1 - mu2)**2/(2*sig2**2) + np.log(sig2**2)/2 + np.log(2*np.pi)/2
+        nll1 = (y1s2[:len(mu1)] - mu1)**2/(2*sig1**2) + np.log(sig1**2)/2 + np.log(2*np.pi)/2
+        nll2 = (y2s1[:len(mu2)] - mu2)**2/(2*sig2**2) + np.log(sig2**2)/2 + np.log(2*np.pi)/2
 
         # Compute the likelihood
         loss = np.sum(nll1) + np.sum(nll2)
@@ -266,11 +268,14 @@ class MasterCurve:
                         x1, y1, s1, gp1 = self._unpack(ind1)
                         x2, y2, s2, gp2 = self._unpack(ind2)
                         x1s2 = self._change_states(self.htransforms, x1, s1, s2, hp1, hp2)
+                        x1s2 = x1s2[~np.isnan(x1s2)]
                         x2s1 = self._change_states(self.htransforms, x2, s2, s1, hp2, hp1)
+                        x2s1 = x2s1[~np.isnan(x2s1)]
                         mu1, sig1 = gp2.predict(x1s2.reshape(-1,1), return_std=True)
                         mu2, sig2 = gp1.predict(x2s1.reshape(-1,1), return_std=True)
                         sig_prod = 1/np.sqrt(np.sum(1/(sig1**2)) + np.sum(1/(sig2**2)))
-                        mu_prod = (sig_prod**2)*(np.sum((y1 - mu1)/sig1**2) + np.sum((mu2 - y2)/sig2**2))
+                        mu_prod = (sig_prod**2)*(np.sum((y1[:len(mu1)] - mu1)/sig1**2)
+                                + np.sum((mu2 - y2[:len(mu2)])/sig2**2))
                         if ind1 == inds[0]:
                             vp1 += [self.vparams[0][ind1]]
                             vp_store += [vp1[0]]
@@ -403,11 +408,14 @@ class MasterCurve:
                                 x1, y1, s1, gp1 = self._unpack(ind1)
                                 x2, y2, s2, gp2 = self._unpack(ind2)
                                 x1s2 = self._change_states(self.htransforms, x1, s1, s2, [p_min], [p_min])
+                                x1s2 = x1s2[~np.isnan(x1s2)]
                                 x2s1 = self._change_states(self.htransforms, x2, s2, s1, [p_min], [p_min])
+                                x2s1 = x2s1[~np.isnan(x2s1)]
                                 mu1, sig1 = gp2.predict(x1s2.reshape(-1,1), return_std=True)
                                 mu2, sig2 = gp1.predict(x2s1.reshape(-1,1), return_std=True)
                                 sig_prod = 1/np.sqrt(np.sum(1/(sig1**2)) + np.sum(1/(sig2**2)))
-                                mu_prod = (sig_prod**2)*(np.sum((y1 - mu1)/sig1**2) + np.sum((mu2 - y2)/sig2**2))
+                                mu_prod = (sig_prod**2)*(np.sum((y1[:len(mu1)] - mu1)/sig1**2)
+                                        + np.sum((mu2 - y2[:len(mu2)])/sig2**2))
                                 vp1 = self.vparams[0][ind1]
                                 vp2 = vp1*np.exp(mu_prod)
                                 self.vparams[0][ind2] = vp2
