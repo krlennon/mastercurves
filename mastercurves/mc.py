@@ -419,6 +419,7 @@ class MasterCurve:
                                 vp1 = self.vparams[0][ind1]
                                 vp2 = vp1*np.exp(mu_prod)
                                 self.vparams[0][ind2] = vp2
+                                self.vuncertainties[0][ind2] = vp1*np.exp(mu_prod)*np.sqrt(sig_prod)
         else:
             # Perform pairwise shifting
             loss_min = []
@@ -519,6 +520,7 @@ class MasterCurve:
                                 vp1 = self.vparams[0][ind1]
                                 vp2 = vp1*np.exp(mu_prod)
                                 self.vparams[0][ind2] = vp2
+                                self.vuncertainties[0][ind2] = vp1*np.exp(mu_prod)*np.sqrt(sig_prod)
 
         # Return error if more than one parameter is specified (other than vertical log Multiply)
         if vparams[-1] > 1:

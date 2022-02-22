@@ -57,5 +57,19 @@ ax3.tick_params(which="both",direction="in",top=True,right=True)
 ax3.yaxis.set_major_locator(tck.MultipleLocator(100))
 ax3.yaxis.set_minor_locator(tck.MultipleLocator(10))
 ax3.yaxis.set_minor_formatter(tck.FormatStrFormatter(''))
+
+# Plot vertical shift factors
+b = mc.vparams[0]
+db = np.array(mc.vuncertainties[0])
+db_cum = [db[0]]
+for i in range(1,len(b)):
+    db_cum += [b[i]*np.sqrt((db[i]/b[i])**2 + (db_cum[i-1]/b[i-1])**2)]
+size = 0.4
+fig4, ax4 = plt.subplots(1,1,figsize=(8*size,6*size))
+ax4.errorbar(tws, b, yerr=db_cum, ls="none", marker="o", mfc="b", mec="b", color="b")
+ax4.set_ylim([0,1.1])
+ax4.set_xlim([300,3900])
+ax4.tick_params(which="both",direction="in",top=True,right=True)
+
 plt.show()
 
