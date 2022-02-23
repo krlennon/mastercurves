@@ -153,9 +153,13 @@ sigma_transformed_v, dsigma_transformed_v = gp_master.predict(gdot_transformed_v
 # Transform using the predicted shift factors
 gdot_v = np.exp(gdot_transformed_v)*g
 sigma_v = np.exp(sigma_transformed_v)*s
-dsigma_v = np.exp(sigma_transformed_v)*dsigma_transformed_v
-dsigma_v = np.sqrt((sigma_v*dsigma_transformed_v)**2 + (np.exp(sigma_transformed_v)*ds)**2)
+dsigma_v = np.sqrt((s*dsigma_transformed_v)**2 + (np.exp(sigma_transformed_v)*ds)**2)
 dsigma_v = np.sqrt((dsigma_v)**2 + (eta_uncertainty*gdot_v)**2)
+dgdx = np.zeros(np.shape(sigma_transformed_v))
+dgdx[1:-1] = (sigma_transformed_v[2:] - sigma_transformed_v[:-2])/(gdot_transformed_v[2:] - gdot_transformed_v[:-2])
+dgdx[0] = (sigma_transformed_v[1] - sigma_transformed_v[0])/(gdot_transformed_v[1] - gdot_transformed_v[0])
+dgdx[-1] = (sigma_transformed_v[-1] - sigma_transformed_v[-2])/(gdot_transformed_v[-1] - gdot_transformed_v[-2])
+dsigma_v = np.sqrt((dsigma_v)**2 + (s*dgdx*gdot_v*dg/(g**2)))
 
 # Plot the predictions
 fig2, ax2 = plt.subplots(1,1)
