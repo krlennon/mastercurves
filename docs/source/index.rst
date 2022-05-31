@@ -16,7 +16,7 @@ Contents
    :maxdepth: 2
    :caption: Introduction
 
-   mastercurves
+   background
    automated
    quickstart
    
@@ -24,4 +24,4 @@ Contents
    :maxdepth: 2
    :caption: API
 
-   api
+   mastercurve
