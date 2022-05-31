@@ -7,8 +7,8 @@ using Gaussian process regression and maximum a posteriori estimation.
 Citing
 ------
 
-This package is based on the methodology outlined in `"A Data-Driven Method for Automated Data 
-Superposition with Applications in Soft Matter Science" <https://arxiv.org/abs/2204.09521>`.
+This package is based on the methodology outlined in [A Data-Driven Method for Automated Data 
+Superposition with Applications in Soft Matter Science](https://arxiv.org/abs/2204.09521).
 If you use this software, please cite this paper! You can use this BibTex citation:
 
 .. code-block:: latex 
@@ -45,6 +45,6 @@ You can also use pip to download updates:
 Contributing
 ------------
 
-Questions, comments, or suggestions can be raised as issues on `GitHub <https://github.com/krlennon/mastercurves>`
+Questions, comments, or suggestions can be raised as issues on [GitHub](https://github.com/krlennon/mastercurves)
 or emailed directly to krlennon[at]mit.edu.
 
