@@ -13,13 +13,13 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Introduction
 
    quickstart
    
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: API
 
    api
