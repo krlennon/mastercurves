@@ -1,22 +1,18 @@
-Welcome to Lumache's documentation!
+Welcome to mastercurves's documentation!
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+**mastercurves** is a Python package for automatically superimposing data sets to create a master curve, using Gaussian process regression and maximum a posteriori estimation.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+Check out the :doc:`quickstart` section to learn how to get started, including an :ref:`installation` guide.
 
 .. note::
 
-   This project is under active development.
+   This project is under active development. Check back for updates!
 
 Contents
 --------
 
 .. toctree::
 
-   usage
+   quickstart
    api
