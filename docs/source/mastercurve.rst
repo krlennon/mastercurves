@@ -1,7 +1,7 @@
 MasterCurve
 ===========
 
-.. autoclass:: mastercurves.MasterCurve
+.. autoclass:: mastercurves.mc.MasterCurve
    :members:
    :undoc-members:
 
