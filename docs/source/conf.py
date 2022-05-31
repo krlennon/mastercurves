@@ -6,7 +6,7 @@ import sys
 # -- Path Setup
 
 sys.path.insert(0, os.path.abspath('../../'))
-autodoc_moc_imports = ['numpy']
+autodoc_mock_imports = ["numpy", "scipy"]
 
 # -- Project information
 
