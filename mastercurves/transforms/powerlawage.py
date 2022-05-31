@@ -19,15 +19,37 @@
 import numpy as np
 
 class PowerLawAge:
-    """
+    r"""
     Class definition for a power law aging shift.
+
+    Attributes:
+        :attr:`bounds` (:attr:`tuple[float]`): the bounds for the aging exponent
+
+        :attr:`default` (:attr:`float`): default value for the aging exponent (1.1)
+
+        :attr:`param` (:attr:`string`): name of the aging exponent ("mu")
+
+        :attr:`prior` (:attr:`p, lam -> float`): the prior distribution over the
+        aging exponent. Only a uniform prior currently supported.
+
+        :attr:`scale` (:attr:`string`): coordinate scale, either log or linear
+
+        :attr:`shared` (:attr:`bool`): attr:`True`, since the aging exponent
+        is state-independent
+
+        :attr:`tref` (:attr:`float`): the reference time
+
+        :attr:`type` (:attr:`string`): :attr:`PowerLawAge`
     """
     def __init__(self, tref, scale="log"):
-        """
-        Initialize the shift.
-        Inputs:
-            tref - the reference time
-            scale - the scale of the time axis (log or linear)
+        r"""
+        Initialize the PowerLawAge object.
+
+        Args:
+            :attr:`tref` (:attr:`float`): the reference time
+
+            :attr:`scale` (:attr:`string`): the scale of the time axis ("log" or "linear").
+            Defaults to "log"
         """
         self.param = "mu"
         self.scale = scale
@@ -39,14 +61,19 @@ class PowerLawAge:
         self.prior = lambda p, lam: 0
 
     def forward(self, param, state, data):
-        """
-        Forward shift the data (from real time to effective time).
-        Inputs:
-            param - value of the shifting parameter mu
-            state - value of the state parameter twait
-            data - the time coordinate t (either t or log(t))
-        Outputs:
-            transformed - the effective time coordinate (either xi or log(xi))
+        r"""
+        Run a forward shift of the data (from real time to effective time).
+
+        Args:
+            :attr:`param` (:attr:`float`): value of the aging exponent "mu"
+
+            :attr:`state` (:attr:`float`): value of the state parameter (the wait time)
+
+            :attr:`data`  (:attr:'array_like`): the time coordinate (either t or log(t))
+
+        Returns:
+            :attr:`transformed` (:attr:`array_like`): the transformed effective time
+            coordinate (either xi or log(xi))
         """
         if self.scale == "log":
             t = np.exp(data)
@@ -60,14 +87,19 @@ class PowerLawAge:
         return transformed
 
     def backward(self, param, state, data):
-        """
-        Backward shift the data (from effective time to real time).
-        Inputs:
-            param - value of the shifting parameter mu
-            state - value of the state parameter twait
-            data - the effective time coordinate (either xi or log(xi))
-        Outputs:
-            transformed - the real time coordinate (either t or log(t))
+        r"""
+        Run a backward shift of the data (from effective time to real time).
+
+        Args:
+            :attr:`param` (:attr:`float`): value of the aging exponent "mu"
+
+            :attr:`state` (:attr:`float`): value of the state parameter (the wait time)
+
+            :attr:`data`  (:attr:'array_like`): the effective coordinate (either xi or log(xi))
+
+        Returns:
+            :attr:`transformed` (:attr:`array_like`): the transformed real time
+            coordinate (either t or log(t))
         """
         if self.scale == "log":
             xi = np.exp(data)

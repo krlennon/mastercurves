@@ -19,14 +19,37 @@
 import numpy as np
 
 class Multiply():
-    """
+    r"""
     Class definition for a multiplicative shift.
+
+    Attributes:
+        :attr:`bounds` (:attr:`tuple[float]`): the bounds for the shift factor
+
+        :attr:`default` (:attr:`float`): default value of the shift factor (1)
+
+        :attr:`prior` (:attr:`p, lam -> float`): the prior distribution over the shift
+        factor. Either Gaussian or uniform.
+
+        :attr:`scale` (:attr:`string`): coordinate scale, either log or linear
+
+        :attr:`shared` (:attr:`bool`): :attr:`False`, since the shift factors
+        are not shared between states
+
+        :attr:`type` (:attr:`string`): :attr:`Multiply`
     """
     def __init__(self, bounds=(1E-2,1), scale="log", prior="uniform"):
-        """
-        Initialize the shift.
-        Inputs:
-            scale - either "log" for a shift in the logarithm of a variable or "linear" for the shift in the variable
+        r"""
+        Initialize the Multiply object.
+
+        Args:
+            :attr:`bounds` (:attr:`tuple[float]`): the upper and lower bounds for the shift
+            factors. Defaults to (1E-2,1).
+
+            :attr:`scale` (:attr:`string`): either "log" for a shift in the logarithm
+            of a variable or "linear" for the shift in the variable. Defaults to "log".
+
+            :attr:`prior` (:attr:`string`): either "uniform" for a uniform prior over the
+            shift factors or "Gaussian" for a Gaussian prior. Defaults to "uniform".
         """
         self.scale = scale
         self.shared = False
@@ -42,14 +65,18 @@ class Multiply():
                 self.prior = lambda p, lam: (lam**2)*(np.log(p))**2
 
     def forward(self, param, state, data):
-        """
-        Run a forward shift on the data (and optinally the standard deviation).
-        Inputs:
-            param - value of the parameter in the shift (either "a" or "b")
-            state - value of the state parameter for this data set
-            data - coordinates (either x or y)
-        Outputs:
-            transformed - the transformed data
+        r"""
+        Run a forward shift on the data (from the current state to the reference state).
+
+        Args:
+            :attr:`param` (:attr:`float`): value of the shift factor for this state
+
+            :attr:`state` (:attr:`float`): value of the state parameter for this data set
+
+            :attr:`data` (:attr:`array_like`): coordinates to be shifted
+
+        Returns:
+            :attr:`transformed` (:attr:`array_like`): the transformed coordinates
         """
         if self.scale == "log":
             transformed = data + np.log(param)
@@ -58,14 +85,18 @@ class Multiply():
         return transformed
 
     def backward(self, param, state, data):
-        """
-        Run a backward shift on the data (and optinally the standard deviation).
-        Inputs:
-            param - value of the parameter in the shift (either "a" or "b")
-            state - value of the state parameter for this data set
-            data - coordinates (either x or y)
-        Outputs:
-            transformed - the transformed data
+        r"""
+        Run a forward shift on the data (from the reference state to the current state).
+
+        Args:
+            :attr:`param` (:attr:`float`): value of the shift factor for this state
+
+            :attr:`state` (:attr:`float`): value of the state parameter for this data set
+
+            :attr:`data` (:attr:`array_like`): coordinates to be shifted
+
+        Returns:
+            :attr:`transformed` (:attr:`array_like`): the transformed coordinates
         """
         if self.scale == "log":
             transformed = data - np.log(param)
