@@ -35,6 +35,7 @@ numeric values labeling the corresponding states.
 When the data is ready, add it to the master curve:
 
 .. code-block:: python
+
    mc.add_data(x_data, y_data, states)
 
 Defining the coordinate transformations
@@ -45,6 +46,7 @@ by a scale factor is required (the typical case for time-temperature superpositi
 this can be done as follows:
 
 .. code-block:: python
+
    from mastercurves.transforms import Multiply
    mc.add_htransform(Multiply())
 
@@ -54,6 +56,7 @@ Superposing the data
 The master curve is now ready for superposition:
 
 .. code-block:: python
+
    mc.superpose()
 
 Plotting the results
@@ -63,5 +66,6 @@ Once superposition is complete, you can generate plots of the raw data,
 data with Gaussian process interpolants, and the superposed mastercurve!
 
 .. code-block:: python
+
    mc.plot()
 
