@@ -16,6 +16,7 @@ Contents
    :maxdepth: 2
    :caption: Introduction
 
+   mastercurves
    quickstart
    
 .. toctree::
