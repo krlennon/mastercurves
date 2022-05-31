@@ -19,7 +19,13 @@ Contents
    background
    automated
    quickstart
-   
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Demos
+
+   tts_demo
+
 .. toctree::
    :maxdepth: 2
    :caption: API
