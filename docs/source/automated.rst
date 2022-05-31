@@ -49,17 +49,19 @@ and variance :math:`s^2(x)` of the Gaussian Process model are fixed:
 where :math:`x^*` is an arbitrary coordinate of interest, :math:`\underline{K}(x^*,\underline{x})` is
 a vector obtained by evaluating the :math:`K(x^*,x';\theta)` with :math:`x'` taking on each value
 present in the data set, :math:`\mathbf{K}` is a matrix obtained by evaluating :math:`K(x,x';\theta)`
-with both :math:`x` and :math:`x'` taking on each value present in the data set, and :math:`\undeline{y}`
+with both :math:`x` and :math:`x'` taking on each value present in the data set, and :math:`\underline{y}`
 is a vector consisting of each value of :math:`y` present in the data set.
 
 A trained Gaussian Process model predicts a smooth interpolant with uncertainty bounds, which looks
 qualitatively like the example presented below.
 
+.. image:: images/gaussian_process.png
+
 It is typical for GPR to be explained abstractly as specifying a *prior distribution* of functions that
 could represent a data set, and applying the data set to obtained the *posterior distribution* of functions
 drawn from that prior that are most likely to fit the data. For instance, the prior and posterior for
 a Radial Basis Function kernel (the first term in our kernel) with an example data set are presented
-below.
+below (taken from `sklearn <https://scikit-learn.org/stable/modules/gaussian_process.html>`_).
 
 .. image:: images/rbf.png
 
