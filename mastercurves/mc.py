@@ -138,8 +138,10 @@ class MasterCurve:
         Args:
             :attr:`xdata_new` (:attr:`array_like` or :attr:`list[array_like]`): array(s) corresponding to
             the dependent coordinates for given states
+
             :attr:`ydata_new` (:attr:`array_like` or :attr:`list[array_like]`): array(s) corresponding to
             the independent coordinates for given states
+
             :attr:`states_new` (:attr:`float` or :attr:`list[float]`): values of the state parameter
             corresponding to the data in :attr:`xdata_new` and :attr:`ydata_new`
         """
@@ -243,11 +245,16 @@ class MasterCurve:
         Args:
             :attr:`transforms` (:attr:`list[Transform]`): the list of transforms to take data
             from state :attr:`s1` to state :attr:`s2`
+
             :attr:`data` (:attr:`array_like`): vector containing the coordinates to be transformed
+
             :attr`s1` (:attr:`float`): the initial state
+
             :attr`s2` (:attr:`float`): the final state
+
             :attr:`p1` (:attr:list[`float`]): the values of the transform parameters corresponding
             to each transform in :attr:`transforms`, for state :attr:`s1`
+
             :attr:`p2` (:attr:list[`float`]): the values of the transform parameters corresponding
             to each transform in :attr:`transforms`, for state :attr:`s2`
 
@@ -262,15 +269,20 @@ class MasterCurve:
         return transformed
 
     def _unpack(self, ind):
-        """
-        Unpack the data associated with index ind.
-        Inputs:
-            ind - index in lists
-        Outputs:
-            x - x-coordinate data
-            y - y-coordinate data
-            s - state
-            gp - fit GP model
+        r"""
+        Unpack the data associated with index :attr:`ind`.
+
+        Args:
+            :attr:`ind` (:attr:`int`): index of the state
+
+        Returns:
+            :attr:`x` (:attr:`array_like`): corresponding x-coordinates
+
+            :attr:`y` (:attr:`array_like`): corresponding y-coordinates
+
+            :attr:`s` (:attr:`float`): corresponding state
+
+            :attr:`gp` (:attr:`sklearn.gaussian_process.GaussianProcessRegressor): corresponding GP model
         """
         x = self.xdata[ind]
         y = self.ydata[ind]
@@ -279,15 +291,25 @@ class MasterCurve:
         return x, y, s, gp
 
     def _pairwise_nlog_posterior(self, ind1, ind2, hp1, hp2, vp1, vp2, lamh, lamv):
-        """
-        Compute the pairwise negative log likelihood loss between two curves.
-        Inputs:
-            ind1, ind2 - the indices in the data lists corresponding to the two data sets.
-            hp1, hp2 - the horizontal shift parameters for each data set
-            vp1, vp2 - the vertical shift parameters for each data set
-            lamh, lamv - hyperparameter(s) defining the prior distributions over horizontal and vertical shifts
-        Outputs:
-            loss - the negative log of the posterior, computed over these two data sets.
+        r"""
+        Compute the pairwise negative log posterior loss between two curves.
+
+        Args:
+            :attr:`ind1`, :attr:`ind2` (:attr:`int`): the indices in the data lists
+            corresponding to the two data sets
+
+            :attr:`hp1`, :attr`hp2` (:attr:`list[float]`): the horizontal shift parameters
+            for each data set, corresponding to each coordinate transformation
+
+            :attr:`vp1`, :attr`vp2` (:attr:`list[float]`): the vertical shift parameters
+            for each data set, corresponding to each coordinate transformation
+
+            :attr:`lamh`, :attr:`lamv` (:attr:`list[float]`): hyperparameter(s) defining
+            the prior distributions over the corresponding horizontal and vertical shifts
+
+        Returns:
+            :attr:`loss` (:attr:`float`): the negative log of the posterior,
+            computed over these two data sets
         """
         # Get the data and GPs
         x1, y1, s1, gp1 = self._unpack(ind1)
@@ -322,15 +344,23 @@ class MasterCurve:
         return loss
 
     def _objective(self, inds, hps, vps, lamh, lamv):
-        """
-        Compute the loss over all data sets in inds, given params hps and vps.
-        Inputs:
-            inds - indices of data curves to shift
-            hps - horizontal shifting parameters
-            vps - vertical shifting parameters
-            lamh, lamv - the horizontal and vertical regularization hyperparameters
-        Outputs:
-            loss - the total loss
+        r"""
+        Compute the loss over all data sets in :attr:`inds`, given params :attr:`hps` and :attr:`vps`.
+
+        Args:
+            :attr:`inds` (:attr:`list[int]`): indices of data sets to shift
+
+            :attr:`hps` - (:attr:`list[float]` or :attr:`list[list[float]]`): horizontal
+            shifting parameters for each state in :attr:`inds` and each coordinate transformation
+
+            :attr:`vps` - (:attr:`list[float]` or :attr:`list[list[float]]`): vertical
+            shifting parameters for each state in :attr:`inds` and each coordinate transformation
+
+            :attr:`lamh`, :attr:`lamv` (:attr:`list[float]`) the horizontal and vertical
+            regularization hyperparameters
+
+        Returns:
+            :attr:`loss` (:attr:`float`): the total loss
         """
         # For every sequential pair in inds
         loss = 0
@@ -396,12 +426,20 @@ class MasterCurve:
         return loss
 
     def superpose(self, lamh=None, lamv=None):
-        """
+        r"""
         Optimize the transformations to superpose the data sets onto a single master curve.
-        Inputs:
-            lamh, lamv - regularization hyperparameters for vertical and horizontal shifts
-        Outputs:
-            loss_min - the minimum loss computed during superposition (either total, or pairwise)
+
+        Args:
+            :attr:`lamh` (:attr:`list[float]`): hyperparameters for the horizontal shifts,
+            corresponding to each state in the master curve. Defaults to :attr:`None`, meaning
+            a uniform (unregularized) prior.
+
+            :attr:`lamv` (:attr:`list[float]`): hyperparameters for the vertical shifts,
+            corresponding to each state in the master curve. Defaults to :attr:`None`, meaning
+            a uniform (unregularized) prior.
+
+        Returns:
+            :attr:`loss_min` (:attr:`float`): the minimum loss computed during superposition
         """
         # First, fit the GPs
         self._fit_gps()
@@ -637,7 +675,7 @@ class MasterCurve:
         return loss_min
 
     def _shift_data(self):
-        """
+        r"""
         Save the shifted data for this master curve.
         """
         self.xtransformed = []
@@ -661,11 +699,29 @@ class MasterCurve:
             self.ytransformed += [y]
 
     def plot(self, log=True, colormap=plt.cm.tab10, colorby="index"):
-        """
+        r"""
         Plot the data, GPs, and master curve.
-        Inputs:
-            log - if True, the data is the log of the desired quantity, so plot in linear space
-            colormap - colormap for plotting curves with different states.
+
+        Args:
+            :attr:`log` (:attr:`bool`): whether the data represents the logarithm of the
+            measured quantity. Defaults to :attr:`True`.
+
+            :attr:`colormap` (:attr:`matplotlib.colors.Colormap`): colormap for plotting.
+            Defaults to the tab10 colormap.
+
+            :attr:`colorby` (:attr:`string`): how to color the data. Options are :attr:`index`
+            for coloring by index, or :attr:`state` for coloring by the value of the state.
+            Defaults to :attr:`index`.
+
+        Returns:
+            :attr:`fig1`, :attr:`ax1` (:attr:`matplotlib.Figure` and :attr:`matplotlib.axes.Axes`): the
+            figure and axes objects displaying the raw (untransformed data)
+
+            :attr:`fig2`, :attr:`ax2` (:attr:`matplotlib.Figure` and :attr:`matplotlib.axes.Axes`): the
+            figure and axes objects displaying the untransformed data and GP models
+
+            :attr:`fig3`, :attr:`ax3` (:attr:`matplotlib.Figure` and :attr:`matplotlib.axes.Axes`): the
+            figure and axes objects displaying the superposed data (i.e. the master curve)
         """
         # Plot the data
         fig1, ax1 = plt.subplots(1,1)
@@ -721,14 +777,20 @@ class MasterCurve:
         return fig1, ax1, fig2, ax2, fig3, ax3
 
     def change_ref(self, ref_state, a_ref=1, b_ref=1):
-        """
-        Change the reference state.
-        Inputs:
-            ref_state - the new reference state, which may be one of the current states or not
-            a_ref - if ref_state is not a current state, must be provided. This is the new reference's horizontal shift
-                    with respect to the current reference
-            b_ref - if ref_state is not a current state, must be provided. This is the new reference's vertical shift
-                    with respect to the current reference
+        r"""
+        Change the reference state for the master curve.
+
+        Args:
+            :attr:`ref_state` (:attr:`float`): the new reference state, which may or may not
+            be one of the current states
+
+            :attr:`a_ref` (:attr:`float`): if :attr:`ref_state` is not a current state,
+            must be provided. This is the new reference's horizontal shift with respect
+            to the current reference. Defaults to 1.
+
+            :attr:`b_ref` (:attr:`float`): if :attr:`ref_state` is not a current state,
+            must be provided. This is the new reference's vertical shift with respect
+            to the current reference. Defaults to 1.
         """
         if len(self.htransforms) == 1:
             if self.htransforms[0].type == "Multiply":
@@ -745,10 +807,16 @@ class MasterCurve:
         self._shift_data()
 
     def output_table(self, file=None):
-        """
-        Write a csv file with a table of all parameters (or return a data frame if no file given).
-        Inputs:
-            file - the (optional) file to which the data frame is written
+        r"""
+        Write a csv file with a table of all parameters (and return as a data frame).
+
+        Args:
+            :attr:`file` (:attr:`string`): (optional) path to the file to which
+            the data frame will be written
+
+        Returns:
+            :attr:`df` (:attr:`pandas.DataFrame`): data frame containing the transformation
+            parameters
         """
         data = {"state": self.states}
         for i in range(len(self.htransforms)):
@@ -769,16 +837,26 @@ class MasterCurve:
         return df
 
     def _mccv(self, x1, y1, s1, x2, y2, s2, lamh, lamv, alpha, folds):
-        """
+        r"""
         Compute the score of a Monte-Carlo cross validation test.
-        Inputs:
-            x1, y1, s1 - the first data set
-            x2, y2, s2 - the second data set
-            lamh, lamv - horizontal and vertical hyperparameters for the prior distribution
-            alpha - the fraction of points kept in the training set
-            folds - the number of MCCV folds to average over
-        Outputs:
-            score - the MCCV score (averaged over folds)
+
+        Args:
+            :attr:`x1`, :attr:`y1`, :attr:`s1` (:attr:`array_like`, :attr:`array_like`,
+            :attr:`float`): the independent coordinates, dependent coordinates, and state
+            for the first data set
+
+            :attr:`x2`, :attr:`y2`, :attr:`s2` (:attr:`array_like`, :attr:`array_like`,
+            :attr:`float`): the independent coordinates, dependent coordinates, and state
+            for the second data set
+
+            :attr:`lamh`, :attr:`lamv` (:attr:`list[float]`, :attr:`list[float]`): horizontal
+            and vertical hyperparameters for the prior distributions over parameters
+
+            :attr:`alpha` (:attr:`float`): the fraction of points kept in the training set
+            :attr:`folds` (:attr:`int`): the number of MCCV folds
+
+        Returns:
+            :attr:`score` (:attr:`float`): the MCCV score (averaged over folds)
         """
         scores = []
         for f in range(folds):
@@ -856,15 +934,28 @@ class MasterCurve:
         return average, sterr
 
     def hpopt(self, lamh=None, lamv=None, npoints=100, alpha=0.5, folds=10):
-        """
+        r"""
         Perform hyperparameter optimization on the prior (regularization) using MCCV.
-        Inputs:
-            lamh, lamv - ranges (tuples) for the hyperparameter search. If not searching this parameter, then None
-            npoints - number of grid points to search
-            alpha - keep rate for MCCV
-            folds - number of MCCV folds
-        Outputs:
-            lamh_opt, lamv_opt - optimal hyperparameters
+
+        Args:
+            :attr:`lamh` (:attr:`list[tuple[float]]`): ranges (tuples) for the horizontal
+            hyperparameter search. If not searching this parameter, then the entry should be None.
+
+            :attr:`lamv` (:attr:`list[tuple[float]]`): ranges (tuples) for the vertical
+            hyperparameter search. If not searching this parameter, then the entry should be None.
+
+            :attr:`npoints` (:attr:`int`): number of grid points to search. Default is 100.
+
+            :attr:`alpha` (:attr:`float`): keep rate for MCCV. Default is 0.5.
+
+            :attr:`folds` (:attr:`int`): number of MCCV folds. Default is 10.
+
+        Returns:
+            :attr:`lamh_opt` (:attr:`list[float]`): optimal horizontal hyperparameters
+            at each state
+
+            :attr:`lamv_opt` (:attr:`list[float]`): optimal vertical hyperparameters
+            at each state
         """
         # Loop through each pair of data sets (only pairwise optimization supported)
         lamh_mins = []
