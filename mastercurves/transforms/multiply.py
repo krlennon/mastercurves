@@ -43,7 +43,7 @@ class Multiply():
 
     def forward(self, param, state, data):
         """
-        Run a forward shift on the data (and optinally the standard deviation.
+        Run a forward shift on the data (and optinally the standard deviation).
         Inputs:
             param - value of the parameter in the shift (either "a" or "b")
             state - value of the state parameter for this data set
@@ -59,7 +59,7 @@ class Multiply():
 
     def backward(self, param, state, data):
         """
-        Run a backward shift on the data (and optinally the standard deviation.
+        Run a backward shift on the data (and optinally the standard deviation).
         Inputs:
             param - value of the parameter in the shift (either "a" or "b")
             state - value of the state parameter for this data set

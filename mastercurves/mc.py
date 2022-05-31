@@ -27,12 +27,84 @@ import numdifftools as nd
 import random
 
 class MasterCurve:
-    """
+    r"""
     Class definition for a master curve, consisting of multiple data sets superimposed.
+
+    A :attr:`MasterCurve` object will contain all of the data used to construct a master
+    curve, along with the coordinate transformations, parameters for coordinate transformations
+    (such as shift factors), associated uncertainties, Gaussian process models, and
+    transformed data.
+
+    Attributes:
+        :attr:`xdata` (:attr:`list[array_like]`): list whose elements are the independent
+        coordinates for a data set at a given state
+
+        :attr:`ydata` (:attr:`list[array_like]`): list whose elements are the dependent
+        coordinates for a data set at a given state
+
+        :attr:`states` (:attr:`list[float]`): list whose elements are the value of the state
+        defining each data set
+
+        :attr:`htransforms` (:attr:`list[Transform]`): list whose elements are the
+        coordinate transforms performed on the independent coordinate (i.e. horizontally)
+
+        :attr:`hparam_names` (:attr:`list[string]`): list whose elements are the names
+        of the parameters for the horizontal transforms
+
+        :attr:`hbounds` (:attr:`list[tuple]`): list whose elements are the upper and lower
+        bounds for the horizontal transformation parameters
+
+        :attr:`hshared` (:attr:`list[bool]`): list whose elements indicate whether the
+        corresponding element of :attr:`hparam_names` is a parameter whose value is shared
+        across all states (:attr:`True`) or takes on an independent value for each state
+        (:attr:`False`)
+
+        :attr:`hparams` (:attr:`list[float]`): list whose elements are the values of the
+        horizontal transformation parameters at each state
+
+        :attr:`huncertainties` (:attr:`list[float]`): list whose elements are the uncertainties
+        associated with the values in :attr:`hparams`
+
+        :attr:`vtransforms` (:attr:`list[Transform]`): list whose elements are the
+        coordinate transforms performed on the dependent coordinate (i.e. vertically)
+
+        :attr:`vparam_names` (:attr:`list[string]`): list whose elements are the names
+        of the parameters for the vertical transforms
+
+        :attr:`vbounds` (:attr:`list[tuple]`): list whose elements are the upper and lower
+        bounds for the vertical transformation parameters
+
+        :attr:`vshared` (:attr:`list[bool]`): list whose elements indicate whether the
+        corresponding element of :attr:`vparam_names` is a parameter whose value is shared
+        across all states (:attr:`True`) or takes on an independent value for each state
+        (:attr:`False`)
+
+        :attr:`vparams` (:attr:`list[float]`): list whose elements are the values of the
+        vertical transformation parameters at each state
+
+        :attr:`vuncertainties` (:attr:`list[float]`): list whose elements are the uncertainties
+        associated with the values in :attr:`vparams`
+
+        :attr:`kernel` (:attr:`sklearn.gaussian_process.kernels.Kernel`): kernel function
+        for the Gaussian process model
+
+        :attr:`gps` (:attr:`list[sklearn.gaussian_process.GaussianProcessRegressor]`): list
+        whose elements are Gaussian process models for each state
+
+        :attr:`xtransformed` (:attr:`list[array_like]`): list whose elements are the transformed
+        independent coordinates for a data set at a given state
+
+        :attr:`ytransformed` (:attr:`list[array_like]`): list whose elements are the transformed
+        dependent coordinates for a data set at a given state
     """
     def __init__(self, fixed_noise=0.04):
-        """
-        Initialize object with some x_data sets and corresponding y_data sets.
+        r"""
+        Initialize a MasterCurve object.
+
+        Args:
+            :attr:`fixed_noise` (:attr:`float`): the fixed noise level for the Gaussian process
+            models, corresponding to experimental uncertainty not evident in the data. By default,
+            the noise level is 0.04.
         """
         self.xdata = []
         self.xtransformed = []
@@ -60,21 +132,23 @@ class MasterCurve:
         self.vshared = []
 
     def add_data(self, xdata_new, ydata_new, states_new):
-        """
-        Add a data set to the master curve.
-        Inputs:
-            xdata (list) - x-data sets corresponding to one or more states.
-                            Each element in the list corresponds to the x-data at a given state.
-            ydata (list) - y-data sets corresponding to one or more states.
-                            Each element in the list corresponds to the y-data at a given state.
-            states (list) - values of the state parameters corresponding to the elements in x_data and y_data.
+        r"""
+        Add a data set or data sets to the master curve.
+
+        Args:
+            :attr:`xdata_new` (:attr:`array_like` or :attr:`list[array_like]`): array(s) corresponding to
+            the dependent coordinates for given states
+            :attr:`ydata_new` (:attr:`array_like` or :attr:`list[array_like]`): array(s) corresponding to
+            the independent coordinates for given states
+            :attr:`states_new` (:attr:`float` or :attr:`list[float]`): values of the state parameter
+            corresponding to the data in :attr:`xdata_new` and :attr:`ydata_new`
         """
         self.xdata += xdata_new
         self.ydata += ydata_new
         self.states += states_new
 
     def clear(self):
-        """
+        r"""
         Clear the master curve's data (useful for memory management).
         """
         self.xdata = []
@@ -95,18 +169,22 @@ class MasterCurve:
         self.vshared = []
 
     def set_gp_kernel(self, kernel):
-        """
+        r"""
         Set the kernel function for the Gaussian Processes used to fit the data.
-        Inputs:
-            kernel (from sklearn.gaussian_process.kernels) - the (potentially composite) kernel function.
+
+        Args:
+            :attr:`kernel` (:attr:`sklearn.gaussian_process.kernels.Kernel`): the
+            (potentially composite) kernel function
         """
         self.kernel = kernel
 
     def _fit_gps(self, overwrite=False):
-        """
+        r"""
         Fit Gaussian Process models to each data set in this master curve.
-        Inputs:
-            overwrite (Boolean) - overwrite existing GP fits if any exist (when True).
+
+        Args:
+            :attr:`overwrite` (:attr:`bool`): overwrite existing GP fits if any exist (when :attr:`True`).
+            By defailt, it is :attr:`False`.
         """
         # Clear GPs if we are overwriting
         if overwrite:
@@ -123,10 +201,12 @@ class MasterCurve:
             self.gps += [GaussianProcessRegressor(kernel=self.kernel).fit(x.reshape(-1,1), y)]
 
     def add_htransform(self, htransform):
-        """
-        Add a horizontal transformation (or series of transformations) to the master curve (sequantially).
-        Inputs:
-            htransform - transformation object
+        r"""
+        Add a horizontal transformation (or series of sequential transformations) to the master curve.
+
+        Args:
+            :attr:`htransform` (:attr:`Transform`): object of a Transform class, which implements the
+            coordinate transformation and stores information about transformation parameters
         """
         self.htransforms += [htransform]
         if htransform.type == "Multiply":
@@ -139,10 +219,12 @@ class MasterCurve:
         self.hshared += [htransform.shared]
 
     def add_vtransform(self, vtransform):
-        """
-        Add a vertical transformation (or series of transformations) to the master curve (sequantially).
-        Inputs:
-            vtransform - transformation object
+        r"""
+        Add a vertical transformation (or series of sequential transformations) to the master curve.
+
+        Args:
+            :attr:`vtransform` (:attr:`Transform`): object of a Transform class, which implements the
+            coordinate transformation and stores information about transformation parameters
         """
         self.vtransforms += [vtransform]
         if vtransform.type == "Multiply":
@@ -155,15 +237,22 @@ class MasterCurve:
         self.vshared += [vtransform.shared]
 
     def _change_states(self, transforms, data, s1, s2, p1, p2):
-        """
-        Given a set of transforms, transform the data coordinate from state s1 to state s2.
-        Inputs:
-            transforms - the list of transforms to take from a state to the reference
-            data - the data coordinate vector
-            s1, s2 - beginning state (s1) and final state (s2)
-            p1, p2 - transforming parameters corresponding to s1 and s2
-        Outputs:
-            transformed - transformed data from s1 to s2
+        r"""
+        Given a set of transforms, transform the data coordinate from state :attr:`s1` to state :attr:`s2`.
+
+        Args:
+            :attr:`transforms` (:attr:`list[Transform]`): the list of transforms to take data
+            from state :attr:`s1` to state :attr:`s2`
+            :attr:`data` (:attr:`array_like`): vector containing the coordinates to be transformed
+            :attr`s1` (:attr:`float`): the initial state
+            :attr`s2` (:attr:`float`): the final state
+            :attr:`p1` (:attr:list[`float`]): the values of the transform parameters corresponding
+            to each transform in :attr:`transforms`, for state :attr:`s1`
+            :attr:`p2` (:attr:list[`float`]): the values of the transform parameters corresponding
+            to each transform in :attr:`transforms`, for state :attr:`s2`
+
+        Returns:
+            :attr:`transformed` (:attr:`array_like`): vector containing the transformed coordinate
         """
         transformed = data
         for i in range(len(transforms)):
