@@ -6,7 +6,9 @@ import sys
 # -- Path Setup
 
 sys.path.insert(0, os.path.abspath('../../'))
-autodoc_mock_imports = ["numpy", "scipy"]
+autodoc_mock_imports = ["numpy", "scipy", "matplotlib.pyplot", "matplotlib.colors",
+        "sklearn.gaussian_process", "sklearn.gaussian_process.kernels",
+        "pandas", "numdifftools", "random"]
 
 # -- Project information
 
