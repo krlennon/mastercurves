@@ -17,6 +17,7 @@ Contents
    :caption: Introduction
 
    mastercurves
+   automated
    quickstart
    
 .. toctree::
