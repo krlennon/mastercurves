@@ -1,8 +1,12 @@
 # mastercurves
 
-Python package for automatically superimposing data sets to create a master curve, using Gaussian process regression and maximum a posteriori estimation.
+Python package for automatically superimposing data sets to create a master curve, using Gaussian process regression and maximum a posteriori estimation. 
 
 Publication of this work is forthcoming. For now, if you use this software, please cite it using the metadata in the [citation](CITATION.cff) file.
+
+## Documentation
+
+Check out the [documentation](http://krlennon-mastercurves.rtfd.io/) to learn more about the package and how to use [its API](https://krlennon-mastercurves.readthedocs.io/en/latest/mastercurve.html). A tutorial and explanation of the demos are coming soon!
 
 ## Installation
 
