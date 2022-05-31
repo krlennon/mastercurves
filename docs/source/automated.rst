@@ -65,3 +65,42 @@ below (taken from `sklearn <https://scikit-learn.org/stable/modules/gaussian_pro
 
 .. image:: images/rbf.png
 
+Maximum A Posteriori Estimation
+-------------------------------
+
+Consider the problem of shifting a single data point :math:`(x_i,y_i)` by a horizontal scale factor :math:`a` 
+and a vertical shift factor :math:`b`. Say that this data point belongs to a data set at state :math:`j`,
+and we'd like to choose :math:`a` and :math:`b` so that this data point overlaps with a GP model from state 
+:math:`k`. We begin by assuming that this shifted data point is an observation from the GP:
+
+.. math::
+   b y_i \sim N(m_k(a x_i), s^2_k(a x_i))
+
+The *negative log-likelihood (NLL)* of this observation is:
+
+.. math::
+   -\ln p(x_i, y_i | a, b) = \frac{1}{2}\left(\frac{b y_i - m_k(a x_i)}{s_k(a x_i)}\right)^2 + \ln s_k(a x_i) + \ln \sqrt{2\pi}
+
+Now, consider generalizing this task to an entire data set :math:`\mathcal{D}_j = \{(x_i, y_i)\}`. The NLL for
+this entire set is the sum of the NLLs of the individual data points:
+
+.. math::
+   -\ln p(\mathcal{D}_j | a, b) = \sum_{(x_i, y_i) \in \mathcal{D}_j} - \ln p(x_i, y_i | a, b)
+
+Finally, to obtain the *posterior* probability of certain shift factors given the data, we apply Bayes'
+theorem:
+
+.. math::
+   p(a, b | \mathcal{D}_j) \propto p(\mathcal{D}_j | a, b) p(a, b)
+
+with a suitable choice of the *prior* over the shift factors, :math:`p(a,b)`. We typically employ either
+a uniform prior or a Gaussian prior, though others may be implemented within this package.
+
+The maximum *a posteriori* estimate for the shift factors is that which minimizes the negative logarithm
+of the posterior:
+
+.. math::
+   \{\hat{a}, \hat{b}\} = \underset{a, b}{\mathrm{arg}\min} [-\ln p(a, b | \mathcal{D}_j)]
+
+By repeating this estimation for each consecutive pair of data sets, we may construct the master curve.
+
