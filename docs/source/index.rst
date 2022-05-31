@@ -25,3 +25,4 @@ Contents
    :caption: API
 
    mastercurve
+   transforms
