@@ -59,7 +59,7 @@ class MasterCurve:
         across all states (:attr:`True`) or takes on an independent value for each state
         (:attr:`False`)
 
-        :attr:`hparams` (:attr:`list[float]`): list whose elements are the values of the
+        :attr:`hparams` (:attr:`list[list[float]]`): list whose elements are the values of the
         horizontal transformation parameters at each state
 
         :attr:`huncertainties` (:attr:`list[float]`): list whose elements are the uncertainties
@@ -79,7 +79,7 @@ class MasterCurve:
         across all states (:attr:`True`) or takes on an independent value for each state
         (:attr:`False`)
 
-        :attr:`vparams` (:attr:`list[float]`): list whose elements are the values of the
+        :attr:`vparams` (:attr:`list[list[float]]`): list whose elements are the values of the
         vertical transformation parameters at each state
 
         :attr:`vuncertainties` (:attr:`list[float]`): list whose elements are the uncertainties
