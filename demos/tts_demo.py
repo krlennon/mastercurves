@@ -33,7 +33,6 @@ for k in range(len(T)):
 # Build a master curve
 mc = MasterCurve()
 mc.add_data(ts, Js, T)
-mc.set_gp_kernel(mc.kernel)
 
 # Add transformations
 mc.add_htransform(Multiply())
