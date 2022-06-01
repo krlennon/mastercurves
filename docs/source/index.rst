@@ -25,6 +25,7 @@ Contents
    :caption: Demos
 
    tts_demo
+   gwn_demo
 
 .. toctree::
    :maxdepth: 2

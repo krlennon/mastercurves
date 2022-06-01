@@ -45,6 +45,11 @@ Not all of the data sets contain the same number of points, so we'll process the
                    ts[k] += [float(row[2*k])]
                    Js[k] += [float(row[2*k+1])]
 
+Notice that we reverse the order of the temperature array, so that the data is organized from high to low
+temperature. This is because we expect lower temperature data to be shifted leftwards (with :math:`a < 1`).
+This is the default assumption for ``Multiply()`` shifts, although it is possible to allow for :math:`a > 1`
+as well, by changing the bounds of the transform.
+
 As is typical during the creation of master curves, it will be easiest to shift the logarithm of the data.
 We'll take the logarithm of both the time and compliance coordinates before adding the data to the master curve.
 
@@ -86,11 +91,29 @@ Plotting the Results
 --------------------
 
 Plotting the master curve is also simple. Now that we've superposed the data, let's first change
-the reference state to that defined in `Plazek (1965) <https://pubs.acs.org/doi/10.1021/j100894a039>`_:
+the reference state to that defined in `Plazek (1965) <https://pubs.acs.org/doi/10.1021/j100894a039>`_.
+We need to know the current shift factors to do this, so we'll obtain them as follows:
+
+.. code-block:: python
+   a = mc.hparams[0]
+
+We need the index :attr:`0` because :attr:`mc.hparams` is a list whose elements are the parameters for
+each transformation applied to the data. We have only one transformation here, so this list has only one
+element (this is usually the case). This element (which we store in :attr:`a`) is itself a list, whose
+elements are the horizontal shift factor for each temperature.
+
+We can use these shift factors to change the reference state:
 
 .. code-block:: python
 
-   mc.change_ref(100, a_ref=10**(1.13)*a[-1])
+   mc.change_ref(97)
+   mc.change_ref(100, a_ref=10**(1.13))
+
+Notice that we change the reference state here in two parts. Our method has shifted curves leftwards,
+but Plazek shifted them rightwards. Changing the reference to the lowest temperature accounts for the
+difference in direction (by making sure uncertainty propagation moves in the correct direction). The
+second change of reference simply rescales all of the shift factors (and uncertainties) so that the 
+lowest temperature shift matches that found by Plazek.
 
 Now, we can plot the raw data, GP models, and master curve:
 
@@ -112,14 +135,4 @@ Lastly, let's clean up the plots a little:
 The results are shown below!
 
 .. image:: images/tts.png
-
-Retrieving the Shift Factors
-----------------------------
-
-Retrieving the shift factors (in this case, the horizontal shift factors :math:`a`) is also straightforward.
-Since there is only one transformation parameter, we obtain the values as follows:
-
-.. code-block:: python
-
-   a = mc.hparams[0]
 
