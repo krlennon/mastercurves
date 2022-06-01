@@ -40,7 +40,7 @@ You can also use pip to download updates:
 
 .. code-block:: console
 
-   $ pip install --upgrade mastercurves
+   $ pip install mastercurves --upgrade
 
 Contributing
 ------------

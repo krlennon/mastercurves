@@ -672,6 +672,7 @@ class MasterCurve:
             raise ValueError("Too many transformations provided. Current version supports one tranformation (in addition to one vertical log Multiply())")
 
         self._shift_data()
+        self._propagate_uncertainty()
         return loss_min
 
     def _shift_data(self):
@@ -697,6 +698,29 @@ class MasterCurve:
                     p = self.vparams[l][k]
                 y = self.vtransforms[l].forward(p, self.states[k], y)
             self.ytransformed += [y]
+
+    def _propagate_uncertainty(self):
+        r"""
+        For Multiply transforms, propagate uncertainty estimates in the shift factors
+        so that the uncertainties are cumulative.
+        """
+        # Only supported when there is one coordinate transform per axis
+        if len(self.htransforms) == 1:
+            if self.htransforms[0].type == "Multiply":
+                huncertainties_new = [0]
+                for i in range(1, len(self.huncertainties[0])):
+                    huncertainties_new += [self.hparams[0][i] *np.sqrt((self.huncertainties[0][i]/self.hparams[0][i])**2 +
+                                (huncertainties_new[i-1]/self.hparams[0][i-1])**2)]
+                self.huncertainties[0] = huncertainties_new
+
+        # Now vertical uncertainties
+        if len(self.vtransforms) == 1:
+            if self.vtransforms[0].type == "Multiply":
+                vuncertainties_new = [0]
+                for i in range(1, len(self.vuncertainties[0])):
+                    vuncertainties_new += [self.vparams[0][i] *np.sqrt((self.vuncertainties[0][i]/self.vparams[0][i])**2 +
+                                (vuncertainties_new[i-1]/self.vparams[0][i-1])**2)]
+                self.vuncertainties[0] = vuncertainties_new
 
     def plot(self, log=True, colormap=plt.cm.tab10, colorby="index"):
         r"""
@@ -795,15 +819,65 @@ class MasterCurve:
         if len(self.htransforms) == 1:
             if self.htransforms[0].type == "Multiply":
                 if ref_state in self.states and a_ref == 1:
-                    a_ref = self.hparams[0][self.states.index(ref_state)]
+                    # Uncertainty propagation
+                    ind_ref = self.states.index(ref_state)
+                    if self.huncertainties[0][0] != 0:
+                        print("Warning: reference state has already been changed. Uncertainty estimates may no longer be accurate")
+                    else:
+                        huncertainties_pairwise = [0]
+                        for i in range(1, len(self.huncertainties[0])):
+                            huncertainties_pairwise += [self.hparams[0][i]
+                                    *np.sqrt((self.huncertainties[0][i]/self.hparams[0][i])**2
+                                        - (self.huncertainties[0][i-1]/self.hparams[0][i-1])**2)]
+                        self.huncertainties[0][ind_ref] = 0
+                        for i in range(ind_ref-1, -1, -1):
+                            self.huncertainties[0][i] = (self.hparams[0][i]
+                                    *np.sqrt((huncertainties_pairwise[i]/self.hparams[0][i])**2
+                                        + (self.huncertainties[0][i+1]/self.hparams[0][i+1])**2))
+                        for i in range(ind_ref+1, len(self.huncertainties[0])):
+                            self.huncertainties[0][i] = (self.hparams[0][i]
+                                    *np.sqrt((huncertainties_pairwise[i]/self.hparams[0][i])**2
+                                        + (self.huncertainties[0][i-1]/self.hparams[0][i-1])**2))
+
+                    # Find the reference shift factor
+                    a_ref = self.hparams[0][ind_ref]
+
+                # Rescale the shift factors and uncertainties
                 for k in range(len(self.hparams[0])):
                     self.hparams[0][k] = self.hparams[0][k]/a_ref
+                    self.huncertainties[0][k] = self.huncertainties[0][k]/a_ref
+
+        # Now vertical shifts
         if len(self.vtransforms) == 1:
             if self.vtransforms[0].type == "Multiply":
                 if ref_state in self.states and b_ref == 1:
+                    # Uncertainty propagation
+                    ind_ref = self.states.index(ref_state)
+                    if self.vuncertainties[0][0] != 0:
+                        print("Warning: reference state has already been changed. Uncertainty estimates may no longer be accurate")
+                    else:
+                        vuncertainties_pairwise = [0]
+                        for i in range(1, len(self.vuncertainties[0])):
+                            vuncertainties_pairwise += [self.vparams[0][i]
+                                    *np.sqrt((self.vuncertainties[0][i]/self.vparams[0][i])**2
+                                        - (self.vuncertainties[0][i-1]/self.vparams[0][i-1])**2)]
+                        self.vuncertainties[0][ind_ref] = 0
+                        for i in range(ind_ref-1, -1, -1):
+                            self.vuncertainties[0][i] = [self.vparams[0][i]
+                                    *np.sqrt((vuncertainties_pairwise[i]/self.vparams[0][i])**2
+                                        + (self.vuncertainties[0][i+1]/self.vparams[0][i+1])**2)]
+                        for i in range(ind_ref+1, len(self.vuncertainties[0])):
+                            self.vuncertainties[0][i] = [self.vparams[0][i]
+                                    *np.sqrt((vuncertainties_pairwise[i]/self.vparams[0][i])**2
+                                        + (self.vuncertainties[0][i-1]/self.vparams[0][i-1])**2)]
+
+                    # Find the reference shift factor
                     b_ref = self.vparams[0][self.states.index(ref_state)]
+
+                # Rescale the shift factors and uncertainties
                 for k in range(len(self.vparams[0])):
                     self.vparams[0][k] = self.vparams[0][k]/b_ref
+                    self.vuncertainties[0][k] = self.vuncertainties[0][k]/b_ref
         self._shift_data()
 
     def output_table(self, file=None):

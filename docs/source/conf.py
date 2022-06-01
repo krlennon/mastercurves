@@ -15,8 +15,8 @@ project = 'mastercurves'
 copyright = '2022, Kyle R. Lennon'
 author = 'Kyle R. Lennon'
 
-release = '0.1'
-version = '0.1.4'
+release = '0.2'
+version = '0.2.0'
 
 # -- General configuration
 
