@@ -22,6 +22,12 @@ Contents
 
 .. toctree::
    :maxdepth: 2
+   :caption: Tutorials
+
+   diffusion
+
+.. toctree::
+   :maxdepth: 2
    :caption: Demos
 
    tts_demo
