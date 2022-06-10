@@ -42,8 +42,6 @@ the Gaussian process models.
 
 .. image:: images/kernels.png
 
-.. image:: images/kernels_shifts.png
-
 Changing the Hyperparameter Bounds
 ----------------------------------
 
