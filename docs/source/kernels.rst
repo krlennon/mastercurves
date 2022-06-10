@@ -47,7 +47,7 @@ Changing the Hyperparameter Bounds
 
 The ``mastercurves`` package uses the default bounds from ``scikit-learn`` on the hyperparameters for
 each kernel function. However, you may run into warnings when superposing your data, like the following
-(from `this issuein the package repository <https://github.com/krlennon/mastercurves/issues/2>`_):
+(from `this issue in the package repository <https://github.com/krlennon/mastercurves/issues/2>`_):
 
 .. code-block:: bash
 
