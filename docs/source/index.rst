@@ -25,6 +25,7 @@ Contents
    :caption: Tutorials
 
    diffusion
+   kernels
 
 .. toctree::
    :maxdepth: 2
