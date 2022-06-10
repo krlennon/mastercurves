@@ -4,7 +4,7 @@ Tutorial: Creating a Master Curve
 This tutorial will explore the fundamentals of using the ``mastercurves`` package to create a
 master curve from synthetic data describing the one-dimensional diffusion of an instantaneous
 point source. The tutorial is based on the example in the introduction from `A Data-Driven Method
-for Automated Data Superposition with Applications in Soft Matter Science <https://arxiv.org/abs/2205.09521>`_,
+for Automated Data Superposition with Applications in Soft Matter Science <https://arxiv.org/abs/2204.09521>`_,
 and on `this issue in the package repository <https://github.com/krlennon/mastercurves/issues/1>`_.
 
 Import Packages
