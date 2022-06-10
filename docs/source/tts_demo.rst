@@ -17,7 +17,7 @@ We'll need a few auxillary packages to run this demo:
    import matplotlib.ticker as tck
    import csv
 
-We can either import the ``mastercurve`` package directly, or we can import only the modules that we need. Doing the latter is a bit cleaner:
+We can either import the ``mastercurves`` package directly, or we can import only the modules that we need. Doing the latter is a bit cleaner:
 
 .. code-block:: python
 
