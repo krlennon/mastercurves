@@ -1,10 +1,12 @@
 [pypi-image]: https://badge.fury.io/py/mastercurves.svg
 [pypi-url]: https://pypi.org/project/mastercurves/
 [pypi-download]: https://static.pepy.tech/personalized-badge/mastercurves?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=downloads
+[docs-image]: https://img.shields.io/badge/docs-latest-blue
+[docs-url]: https://krlennon-mastercurves.readthedocs.io/en/latest/#
 
 # mastercurves
 
-[![PyPI Version][pypi-image]][pypi-url] [![pypi download][pypi-download]][pypi-url]
+[![PyPI Version][pypi-image]][pypi-url] [![pypi download][pypi-download]][pypi-url] [![docs latest][docs-image]][docs-url]
 
 Python package for automatically superimposing data sets to create a master curve, using Gaussian process regression and maximum a posteriori estimation. 
 
