@@ -1,8 +1,14 @@
 from setuptools import setup, find_packages
+import codecs
+import os
 
-VERSION = '0.2.0'
+def read(*parts):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, *parts), "r") as fp:
+        return fp.read()
+
+VERSION = '0.2.2'
 DESCRIPTION = 'Python package for building master curves from data'
-LONG_DESCRIPTION = 'Python package for building master curves from data. Uses Gaussian process regression and Bayesian inference to build statically robust master curves from parametrically self-similar data, with uncertainty estimates.'
 
 # Setting up
 setup(
@@ -13,7 +19,9 @@ setup(
         author_email="<kyle.lennon08@gmail.com>",
         description=DESCRIPTION,
         license="GNU GPLv3",
-        long_description=LONG_DESCRIPTION,
+        long_description=read("README.md"),
+        long_description_content_type="text/markdown",
+        url="https://github.com/krlennon/mastercurves",
         packages=find_packages(),
         install_requires=["numpy", "matplotlib", "scikit-learn", "scipy", "pandas", "numdifftools"],
         keywords=['python', 'master', 'curves', 'mastercurves', 'Bayesian', 'Gaussian', 'process', 'regression', 'machine', 'learning', 'statistics'],

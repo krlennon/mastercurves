@@ -2,7 +2,7 @@
 
 Python package for automatically superimposing data sets to create a master curve, using Gaussian process regression and maximum a posteriori estimation. 
 
-Publication of this work is forthcoming. For now, if you use this software, please cite it using the metadata in the [citation](CITATION.cff) file.
+Publication of this work is forthcoming. For now, if you use this software, please cite it using the metadata in the [citation](https://github.com/krlennon/mastercurves/blob/main/CITATION.cff) file.
 
 ## Documentation
 
@@ -75,11 +75,11 @@ mc.plot()
 
 ## Examples
 
-Multiple examples of the software's use can be found in the [demos folder](demos), which demonstrate much of the functionality of the software.
+Multiple examples of the software's use can be found in the [demos folder](https://github.com/krlennon/mastercurves/tree/main/demos), which demonstrate much of the functionality of the software.
 
 ## Contibuting
 
-Inquiries and suggestions can be directed to krlennon[at]mit.edu. In particular, useful transformations can be directly added to the [transforms](mastercurves/transforms) directory, either in a local copy of the package or by raising an issue here!
+Inquiries and suggestions can be directed to krlennon[at]mit.edu. In particular, useful transformations can be directly added to the [transforms](https://github.com/krlennon/mastercurves/tree/main/mastercurves/transforms) directory, either in a local copy of the package or by raising an issue here!
 
 ## License
 
@@ -87,7 +87,7 @@ Inquiries and suggestions can be directed to krlennon[at]mit.edu. In particular,
 
 ## References
 
-The data used in the [demos](demos) has been generously provided by authors of the following publications:
+The data used in the [demos](https://github.com/krlennon/mastercurves/tree/main/demos) has been generously provided by authors of the following publications:
 
 T.  H.  Larsen  and  E.  M.  Furst,  “Microrheology  of  the liquid-solid transition during gelation,” Phys. Rev. Lett., vol. 100, p. 146001, Apr 2008.
 
