@@ -97,15 +97,15 @@ Inquiries and suggestions can be directed to krlennon[at]mit.edu. In particular,
 
 The data used in the [demos](https://github.com/krlennon/mastercurves/tree/main/demos) has been generously provided by authors of the following publications:
 
-T.  H.  Larsen  and  E.  M.  Furst,  “Microrheology  of  the liquid-solid transition during gelation,” Phys. Rev. Lett., vol. 100, p. 146001, Apr 2008.
+T.  H.  Larsen  and  E.  M.  Furst,  *Microrheology  of  the liquid-solid transition during gelation*, Phys. Rev. Lett., vol. 100, p. 146001, Apr 2008.
 
-S.  M.  Lalwani,  P.  Batys,  M.  Sammalkorpi,  and  J.  L.Lutkenhaus,  “Relaxation  Times  of  Solid-like  Polyelectrolyte Complexes of Varying pH and Water Content,” Macromolecules, vol. 54, pp. 7765–7776, Sep 2021.
+S.  M.  Lalwani,  P.  Batys,  M.  Sammalkorpi,  and  J.  L.Lutkenhaus,  *Relaxation  Times  of  Solid-like  Polyelectrolyte Complexes of Varying pH and Water Content*, Macromolecules, vol. 54, pp. 7765-7776, Sep 2021.
 
 The data in other examples was digitized from the following publications:
 
-R. Gupta, B. Baldewa, and Y. M. Joshi, “Time temperature superposition in soft glassy materials,” Soft Matter, vol. 8, pp. 4171–4176, 2012.
+R. Gupta, B. Baldewa, and Y. M. Joshi, *Time temperature superposition in soft glassy materials*, Soft Matter, vol. 8, pp. 4171-4176, 2012.
 
-R. I. Dekker, M. Dinkgreve, H. de Cagny, D. J. Koeze,B. P. Tighe, and D. Bonn, “Scaling of flow curves: Comparison between experiments and simulations,” Journal of Non-Newtonian Fluid Mechanics, vol. 261, pp. 33–37, 2018.
+R. I. Dekker, M. Dinkgreve, H. de Cagny, D. J. Koeze, B. P. Tighe, and D. Bonn, *Scaling of flow curves: Comparison between experiments and simulations*, Journal of Non-Newtonian Fluid Mechanics, vol. 261, pp. 33-37, 2018.
 
-D. J. Plazek, “Temperature dependence of the viscoelastic  behavior  of  polystyrene,” The Journal of PhysicalChemistry, vol. 69, pp. 3480–3487, Oct 1965.
+D. J. Plazek, *Temperature dependence of the viscoelastic  behavior  of  polystyrene*, The Journal of Physical Chemistry, vol. 69, pp. 3480-3487, Oct 1965.
 

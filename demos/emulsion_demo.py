@@ -97,10 +97,8 @@ if __name__ == "__main__":
     da = mc.huncertainties[0]
     sigma_y = 4.7/np.array(b)
     dsigma_y = 4.7*np.array(db)/(np.array(b)**2)
-    dsigma_y[1:] = sigma_y[1:]*np.sqrt((dsigma_y[1:]/sigma_y[1:])**2 + (dsigma_y[:-1]/sigma_y[:-1])**2)
     gamma_c = 4.7/np.array(a)
     dgamma_c = 4.7*np.array(da)/(np.array(a)**2)
-    dgamma_c[1:] = gamma_c[1:]*np.sqrt((dgamma_c[1:]/gamma_c[1:])**2 + (dgamma_c[:-1]/gamma_c[:-1])**2)
     sigma_y_tc = np.array([4.7, 7.5, 10, 13.1, 18.4, 24.9, 30.4])
     dsigma_y_tc = np.array([0.1, 0.1, 0.1, 0.1, 0.2, 0.4, 0.5])
     gamma_c_tc = np.array([4.7, 6.3, 7.2, 8.0, 9.1, 9.8, 10.9])
@@ -117,7 +115,6 @@ if __name__ == "__main__":
     fig1, ax1, fig2, ax2, fig3, ax3 = mc.plot(log=True, colormap=plt.cm.viridis)
     ax2.tick_params(which="both",direction="in",top=True,right=True)
     ax3.tick_params(which="both",direction="in",top=True,right=True)
-    ax3.set_ylim([3,100])
 
     # Repeat for the viscosity determined from TC fits
     eta_min = 0.037

@@ -100,10 +100,8 @@ a = mc.hparams[0]
 da = mc.huncertainties[0]
 sigma_y = 4.7/np.array(b)
 dsigma_y = 4.7*np.array(db)/(np.array(b)**2)
-dsigma_y[1:] = sigma_y[1:]*np.sqrt((dsigma_y[1:]/sigma_y[1:])**2 + (dsigma_y[:-1]/sigma_y[:-1])**2)
 gamma_c = 4.7/np.array(a)
 dgamma_c = 4.7*np.array(da)/(np.array(a)**2)
-dgamma_c[1:] = gamma_c[1:]*np.sqrt((dgamma_c[1:]/gamma_c[1:])**2 + (dgamma_c[:-1]/gamma_c[:-1])**2)
 fig, ax = plt.subplots(1,1)
 ax.errorbar(phi, sigma_y, yerr=dsigma_y, color="blue", linestyle="none", marker="^")
 ax.errorbar(phi, gamma_c, yerr=dgamma_c, color="red", linestyle="none", marker="o")
