@@ -7,7 +7,7 @@ def read(*parts):
     with codecs.open(os.path.join(here, *parts), "r") as fp:
         return fp.read()
 
-VERSION = '0.2.2'
+VERSION = '0.2.3'
 DESCRIPTION = 'Python package for building master curves from data'
 
 # Setting up
